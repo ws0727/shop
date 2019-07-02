@@ -1,0 +1,322 @@
+{include file="header"}
+<!--/_menu 作为公共模版分离出去-->
+
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 权限分类管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+		
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div >
+				<!-- <div class="Huiform" method="post" action="" target="_self"> -->
+					<input type="text" placeholder="分类名称"  id="name" class="input-text" style="width:120px">
+
+					<input id="__token__" name="__token__" value="{$Request.token}" />
+
+					<input type="text" placeholder="分类描述"  id="description"  class="input-text" style="width:120px">
+					<button type="button" class="btn btn-success" id="add" name="" ><i class="Hui-iconfont">&#xe600;</i> 添加</button>
+					<span id="span_show"></span>
+				<!-- </div> -->
+			</div>
+			<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a onclick="del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a></span>
+				<span id='token_delete' hidden="">{$token}</span>
+
+			 <span class="r">共有数据：<strong>54</strong> 条</span> </div>
+			<div class="mt-10">
+				<table class="table table-border table-bordered table-bg table-sort">
+					<thead>
+						<tr class="text-c">
+							<th width="40"><input type="checkbox" name="" value=""></th>
+							<th width="150">ID</th>
+							<th width="150">分类名称</th>
+							<th width="150">描述</th>
+							<th width="150">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+							
+
+					</tbody>
+				</table>
+			</div>
+		</article>
+	</div>
+	<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" style="color:#A0E8A0;text-align: center;">权限分类修改</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body" style="text-align: center; padding: 10px;">
+				<input type="text" id="up_id" style="width: 100px; height: 25px;" hidden="">
+				<br><br>
+				分类名称：<input type="text" id="up_name" style="width: 200px; height: 25px;">
+				<br><br><br>
+				分类描述：<input type="text" id="up_description"  style="width: 200px; height: 25px;">
+				<br><br>
+				<span id="uname"></span>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="up_action()">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{include file="footer"}
+<!--_footer 作为公共模版分离出去--> 
+<!--请在下方写此页面业务相关的脚本--> 
+<script>
+
+			function  up_action(){
+			var id=$('#up_id').val()
+			var name=$('#up_name').val()
+			var description=$('#up_description').val()
+			var __token__=$('#__token__').val()
+		      $.ajax({
+		      url:"{:url('permissioncate/updateAction')}",
+		      type:'post',
+		             data:{
+		              id:id,
+		              name:name,
+		              description:description,
+		              __token__:__token__
+		            },
+		            dataType:'json',
+		             success:function (res) {
+		             	console.log(res)
+		             	
+		             	if (res.status=='ok') {
+		              $("#uname").html()
+		              $("#modal-demo").modal("hide")
+		                 show()
+		             	}
+		             	if (res.status=='error') {
+		                 $("#uname").html(res.data)
+		                 
+		             	}
+		             	getToken()
+		             }
+
+		         })
+
+	          } 
+
+		    function  modaldemo(id,name,description){
+			$('#up_id').val(id)
+			$('#up_name').val(name)
+			$('#up_description').val(description)
+		    $("#modal-demo").modal("show")
+			console.log(id)
+		    }
+
+            
+            function getToken() {
+            	$.ajax({
+            		url:"{:url('common/commonToken')}",
+            		dataType:'json',
+            		success:function (res) {
+            			$('#__token__').val(res.token)
+            		}
+            	})
+            }
+
+
+
+            $(document).on("dblclick",".upname",function(){   
+	         var name =$(this).text()
+	         var input = "<input class='inputname' type='text' value='"+name+"'/>"
+	    
+	         $(this).parent().html(input)
+	         $(".inputname").focus();
+           }) 
+            $(document).on("blur",".inputname",function(){   
+	         var _this=$(this)
+	         var _parent=$(this).parent()
+	         var id =$(this).parent().attr('tid') 
+	         var name =$(this).val()
+	         var description =$(this).parent().next().html() 
+	         var old_name =$(this).parent().attr('tname') 
+	         var __token__=$('#__token__').val()
+	         // console.log(id)
+	         // console.log(name)
+	         // console.log(description)
+	            $.ajax({
+	            	url:"{:url('permissioncate/updateAction')}",//请求的连接
+	            	type:'post',
+		             data:{
+		              id:id,
+		              name:name,
+		              description:description,
+		              __token__: __token__
+		            },
+		            dataType:'json',
+		             success:function (res) {
+		             	console.log(res.code)
+		             	if (res.status=='ok') {
+				    var span= "<span class=upname>"+name+"</span>"
+			           _this.parent().html(span)
+			           _parent.attr('tname',name)
+		             	}
+		             	if (res.status=='error') {
+		             var span= "<span class=upname>"+old_name+"</span>"
+			           _this.parent().html(span)
+		             	}
+		             	getToken()
+		             }
+			     })
+           })     
+     
+
+	         function show() {
+	              var tr=''
+	        $.ajax({
+	        	url:"{:url('permissioncate/show')}",
+	        	dataType:'json',
+	        	success:function(res){
+		     for (var i = 0; i < res.length; i++) {
+			console.log(res[i].name)
+			tr=tr+"<tr class='text-c'><td><input class='mycheckbox' name='' type='checkbox' value='"+res[i].id+"'></td><td>"+res[i].id+"</td><td tid='"+res[i].id+"' tname='"+res[i].name+"'><span class='upname'>"+res[i].name+"</span></td><td>"+res[i].description+"</td><td class='f-14 product-brand-manage'><a onClick='modaldemo(\""+res[i].id+"\",\""+res[i].name+"\",\""+res[i].description+"\")' style='text-decoration:none' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='ml-5'onclick='mydelete("+res[i].id+")'  title='删除'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>"
+            		}
+            		$(".table tbody").html(tr);
+            	}
+             })
+           }
+        show()
+        getToken()
+
+	 
+             function mydelete(id) {
+             var __token__=$('#__token__').val()
+              $.ajax({
+              	url:"{:url('permissioncate/delete')}",
+              	type:'post',
+              	data:{
+              		  id:id,
+              		__token__:__token__
+              	},
+              	dataType:'json',
+              	success:function(res){
+                 console.log(res.data)
+                 if (res.status=='ok') {
+                      alert('删除成功☺');
+                      show()
+
+                }
+               getToken()   
+            }
+  
+        })
+              
+     }         
+    
+				     function del(){
+				 
+				    var r=confirm("确认删除吗☺？");
+				    if (r==true){
+				       var __token__=$('#__token__').val()
+				       var box=$(".mycheckbox:checked")
+		               var id=''
+		               for (var i = 0; i < box.length; i++) {
+		               	 id=id+","+box[i].value
+		               }
+		             $.ajax({
+		              	url:"{:url('permissioncate/deletemore')}",
+		              	data:{
+		              		id:id,
+		              	  __token__: __token__
+		              	},
+		              	type:'post',
+		              	dataType:'json',
+		              	success:function(res){
+		                 console.log(res.data)
+		                 if (res.status=='ok') {
+		                      alert('删除成功☺');
+		                      show()
+		                }else{
+
+		                }
+		                 getToken()
+		             }
+
+		         })
+		     }
+				   
+	     }
+
+        
+	       
+         $("#add").click(function(){
+         	 var name=$('#name').val() //文本框接值
+             var description=$('#description').val()
+             var __token__=$('#__token__').val()
+             console.log(name)
+             console.log(name)
+             console.log(description)
+
+            $.ajax({
+             url:"{:url('permissioncate/addAction')}",//请求的连接
+             data:{
+              name:name,
+              description:description,//请求参数
+              __token__:__token__
+            },
+             type:'post', //传值方式采用post
+             dataType:'json',
+             success:function (res) {
+             	console.log(res)
+             	if (res.status=='ok') {
+						$("#span_show").html(res.data);
+						$("#span_show").css("color",'green');
+						$("#name").val('');
+						$("#description").val('');
+						setTimeout(function(){
+						$("#span_show").html('');
+						},3000);
+						show()
+					}
+				
+             	if (res.status=='error'){
+             	  //已经存在该数据的在span显示该数据存
+             		$("#span_show").html(res.data);
+             		$("#span_show").css("color",'red');
+
+             	 }
+             	   getToken()
+               }
+            })
+
+         });
+          
+
+</script>
+<!-- 鼠标点击特效 -->
+
+<!-- 
+<script type="text/javascript">
+$(document).ready(function(){
+    var a_index = 0;
+    $("body").click(function(e){
+        var a = new Array("❤", "★", "❤", "☆", "△", "∮", "❤" ,"★", "❤", "△");
+        var $i = $("<span/>").text(a[a_index]);
+        a_index = (a_index + 1) % a.length;
+        var x = e.pageX,y = e.pageY;
+        $i.css({
+            "z-index": 99999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": "#00FFFF"
+        });
+        $("body").append($i);
+        $i.animate({"top": y-180,"opacity": 0},1500,function() {
+            $i.remove();
+        });
+    });
+});
+</script>
+
+
+ -->
