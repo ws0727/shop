@@ -10,7 +10,7 @@
 				<!-- <div class="Huiform" method="post" action="" target="_self"> -->
 					<input type="text" placeholder="分类名称"  id="name" class="input-text" style="width:120px">
 
-					<input id="__token__" name="__token__" value="{$Request.token}" />
+					<input id="__token__" name="__token__" value="{$Request.token}" hidden="" />
 
 					<input type="text" placeholder="分类描述"  id="description"  class="input-text" style="width:120px">
 					<button type="button" class="btn btn-success" id="add" name="" ><i class="Hui-iconfont">&#xe600;</i> 添加</button>
@@ -63,7 +63,7 @@
 		</div>
 	</div>
 </div>
-
+</section>
 {include file="footer"}
 <!--_footer 作为公共模版分离出去--> 
 <!--请在下方写此页面业务相关的脚本--> 

@@ -7,6 +7,17 @@
 
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
+	
+    function getToken() {
+            	$.ajax({
+            		url:"{:url('common/commonToken')}",
+            		dataType:'json',
+            		success:function (res) {
+            			$('#__token__').val(res.token)
+            		}
+            	})
+            }
+
 
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
