@@ -1,0 +1,285 @@
+{include file="header"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		管理员管理
+		<span class="c-gray en">&gt;</span>
+		管理员列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div class="text-c">	
+			</div>
+			<input type="hidden" id="__token__" value="{$Request.token}" hidden="" />
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> <a href="javascript:;" onclick="deletemore()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>批量删除</a></span>&nbsp&nbsp&nbsp&nbsp
+				<span onclick="modaldemo()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加管理员 </span>
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead>
+					<tr>
+						<th scope="col" colspan="9">员工列表</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="40">ID</th>
+						<th width="100">登录名</th>
+						<th width="90">角色</th>
+						<th width="90">手机号码</th>
+						<th width="130">加入时间</th>
+						<th width="100">是否已启用</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</article>
+	</div>
+	     <div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" style="color:#A0E8A0;text-align: center;">添加管理员</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<div class="modal-body" style="text-align: center; padding: 10px;">
+				用户名称：<input type="text" placeholder="用户名称" id="name" style="width: 200px; height: 25px;">
+				<br><br>
+				用户密码：<input type="password"  placeholder="用户密码" id="password"  style="width: 200px; height: 25px;">
+				<br><br>
+			    确认密码：<input type="password"  placeholder="确认密码" id="password1"  style="width: 200px; height: 25px;">
+				<br><br>
+				用户手机：<input type="text" placeholder="用户手机" id="mobile"  style="width: 200px; height: 25px;">
+				<br><br>
+				用户角色：<select id="role_id" style="width:100px; height: 30px;">				
+				</select>
+				<span id="uname"></span>
+			</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="add">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+  <!--  修改弹框 -->
+     <div id="modal-demo1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" style="color:#A0E8A0;text-align: center;">添加管理员</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<div class="modal-body" style="text-align: center; padding: 10px;">
+			     <input type="text" name="" id="up_id" hidden="">
+				用户名称：<input type="text" placeholder="用户名称" id="up_name" style="width: 200px; height: 25px;">
+				<br><br>
+				<input type="text"  placeholder="用户密码" id="up_password"  style="width: 200px; height: 25px;" hidden="">
+				
+				用户手机：<input type="text" placeholder="用户手机" id="up_mobile"  style="width: 200px; height: 25px;">
+				<br><br>
+				用户角色：<select id="up_role_id" style="width:100px; height: 30px;">				
+				</select>
+				<span id="span"></span>
+			</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="up_action()">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+</sectin>	
+{include file="footer"} 
+<script type="text/javascript">
+					 function modaldemo(){
+				        $("#modal-demo").modal("show")
+				        getCate()
+				    }
+			         
+		            $("#add").click(function(){
+					var name=$('#name').val()
+					var password=$('#password').val()  
+					var mobile=$('#mobile').val()  
+					var role_id=$('#role_id').val()
+				    var __token__=$('#__token__').val()
+						console.log(role_id)
+					$.ajax({
+                       url:"{:url('user/addAction')}",
+                       type:'post',
+                       data:{
+                       name:name,
+                       password:password,
+                       mobile:mobile,
+                       role_id:role_id,
+                        __token__:__token__
+                       },
+                       dataType:'json',
+                       success:function (res) {
+                       	console.log(res)
+                       	if (res.status=='ok') {
+						$('#name').val('')
+						$('#password').val('')  
+						$('#mobile').val('')  
+						$('#uname').val('')
+		              $("#modal-demo").modal("hide")
+		                 show()  	
+		             	}
+		             	if (res.status=='error') {
+		                 $("#uname").html(res.data)
+		                  $("#uname").css("color",'red')
+		                 
+		             	}
+		             	 getToken()
+		             	
+                       }
+					})      
+              
+                });
+
+
+
+              function getCate(str,id=0) {
+			  	$.ajax({
+			  		url:"{:url('role/show')}",
+			  		dataType:'json',
+			  		success:function (res) {
+			  			var option=''
+			  			for (var i = 0; i < res.length; i++) {
+						if (id==res[i].id) {
+					        option=option+"<option value='"+res[i].id+"' selected>"+res[i].name+"</option>";		
+						}else{
+					        option=option+"<option value='"+res[i].id+"'>"+res[i].name+"</option>";	
+						}
+			  			 
+			  			}
+			          $('#'+str+'').html(option)
+			  		}
+
+	  	        })
+	        }
+                 getCate('role_id')
+
+                   function show() {
+		        	$.ajax({
+			  		url:"{:url('user/show')}",
+			  		dataType:'json',
+			  		success:function (res) {
+			  			// console.log(res)
+		  			var tr=''
+		  			for (var i = 0; i < res.length; i++) {
+				tr=tr+"<tr class='text-c'><td><input type='checkbox' class='mycheckbox' value='"+res[i].id+"'></td><td>"+res[i].id+"</td><td>"+res[i].user_name+"</td><td>"+res[i].name+"</td><td>"+res[i].mobile+"</td><td>"+res[i].create_time+"</td><td></td><td class='f-14 product-brand-manage'><a onclick='modaldemo1(\""+res[i].id+"\",\""+res[i].user_name+"\",\""+res[i].password+"\",\""+res[i].mobile+"\",\""+res[i].role_id+"\")'  style='text-decoration:none' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='delete_one ml-5'onclick='del(\""+res[i].id+"\")'title='删除'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>"
+			}
+	  			$('.table tbody').html(tr)
+	  		
+	  		}
+
+	  	})
+	 }
+	  show()	
+
+                  function modaldemo1(id,name,password,mobile,role_id){
+								$("#up_id").val(id)
+								$("#up_name").val(name)
+								$("#up_password").val(password)
+								$("#up_mobile").val(mobile)
+								$("#up_role_id").val(role_id)
+						        getCate('up_role_id',role_id)
+	
+				               $("#modal-demo1").modal("show")
+				        
+				       }
+
+				    function up_action() {
+				     var id=$("#up_id").val()
+					 var name=$("#up_name").val()
+					 var password=$("#up_password").val()
+					 var mobile=$("#up_mobile").val()
+					 var role_id=$("#up_role_id").val()
+					 var __token__=$('#__token__').val()
+						console.log(id)
+					$.ajax({
+						url:"{:url('user/updateAction')}",
+						data:{
+                          id:id,
+                          name:name,
+                          password:password,
+                          mobile:mobile,
+                          role_id:role_id,
+                           __token__:__token__
+						},
+						type:'post',
+						dataType:'json',
+						success:function(res) {
+						  console.log(res)
+							if (res.status=='ok') {
+						   $("#modal-demo1").modal("hide")
+		                     show()  	
+							}
+							if (res.status=='error') {
+							   $("#span").html(res.data)
+							    $("#span").css("color",'red')
+		                 
+		             	  }
+							getToken()
+						}
+					})
+			    }
+
+              function del(id) {
+                 var __token__=$('#__token__').val()
+              	 $.ajax({
+              	 	url:"{:url('user/delete')}",
+              	 	type:'post',
+              	 	data:{
+              	 		id:id,
+              	 	__token__:__token__
+              	 	},
+              	 	dataType:'json',
+              	 	success:function (res) {
+              	     if (res.status=='ok') {
+                      alert('删除成功☺');
+                      show()
+                      getToken()
+                      }
+              	 	}
+
+              	 })
+
+           }
+
+			     function deletemore() {
+			     var __token__=$('#__token__').val()
+			     	var box=$(".mycheckbox:checked")
+			     	var id=''
+			     	 for (var i = 0; i < box.length; i++) {
+			     	 	id=id+","+box[i].value
+			     	 }
+			     	 console.log()
+			     	 $.ajax({
+			     	 	url:"{:url('user/deletemore')}",
+			     	 	type:'post',
+			     	 	data:{
+			     	 		id:id,
+			     	 	__token__:__token__
+			     	 	},
+			     	 	dataType:'json',
+			     	 	success:function (res) {
+			     	 		console.log(res.data)
+			     	 		if (res.status=='ok') {
+			     	 			alert("删除成功☺")
+			     	 			show()
+			     	 		}
+			     	 	}
+			     	 })
+			     }
+              
+</script>
+

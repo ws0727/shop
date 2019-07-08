@@ -24,7 +24,7 @@
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<button type="button" class="btn btn-success radius" id="add" name="admin-role-save"><i class="icon-ok"></i> 确定</button>
+				<button type="button" class="btn btn-success radius" id="add" name="admin-role-save"><i class="icon-ok"></i> 确定</button><span id="addspan"></span>
 			</div>
 		</div>
 	</form>
@@ -56,8 +56,15 @@
 		        	type:'post',
 		        	dataType:'json',
 		        	success:function (res) {
-		        	 getToken()
-		        	console.log(res)
+		        	   console.log(res)
+		        		if (res.status=='ok') {
+                     window.location.href="{:url('role/list')}";
+		        		}
+		        		if (res.status='error') {
+		        		$("#addspan").html(res.data)
+		        		$("#addspan").css("color",'red')
+		        		}
+		        	   getToken()
 
 		        	}
 		        })

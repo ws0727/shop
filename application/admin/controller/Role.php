@@ -51,7 +51,7 @@ class Role extends Common
 	      		}
                $arr=['code'=>1,'status'=>'ok','data'=>'修改成功'];
 		      	echo json_encode($arr);
- 	      	    // 删除 重新入库      	
+ 	      	        	
 	      }else{
 	      	$arr=['code'=>3,'status'=>'error','data'=>'修改失败重名'];
 	      	echo json_encode($arr);
@@ -79,6 +79,7 @@ class Role extends Common
             foreach ($arr as $key => $value) {
             	$newarr[$value['p_c_name']][]=$value;
             }
+
              $json=['code'=>'0','status'=>'ok','data'=>$newarr];
              return json($json);
          }
