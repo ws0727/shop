@@ -1,0 +1,245 @@
+{include file="header"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		产品管理
+		<span class="c-gray en">&gt;</span>
+		品牌管理<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div class="text-c">	
+			</div>
+		<!-- 	<input type="hidden" id="__token__" value="{$Request.token}" hidden="" /> -->
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> <a href="javascript:;" onclick="deletemore()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>批量删除</a></span>&nbsp&nbsp&nbsp&nbsp
+				  <a href="{:url('brand/add')}"><span onclick="modaldemo()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加品牌 </span></a>
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead>
+					<tr>
+						<th scope="col" colspan="9">员工列表</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="70">ID</th>
+							<th width="120">品牌名称</th>
+							<th width="200">LOGO</th>
+							<th width="230">品牌网址</th>
+							<th width="230">品牌描述</th>
+							<th width="120">状态</th>
+							<th width="130">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</article>
+	</div>
+     <div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" style="color:black;text-align: center;">品牌管理修改</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div style="text-align: center;">
+			<input type="text"id="up_id" name="" hidden="">
+			<br>
+		    <span style="color:red">*品牌描述：</span>
+		    <input type="text" name="" id="up_name" placeholder="品牌描述"style="width: 300px;height: 25px;">
+		    <br><br>
+		 
+	
+		    <span style="color:red">*品牌网址：</span>
+		    <input type="text" name=""  id="up_site_url" placeholder="品牌网址" style="width: 300px;height: 25px;">
+		    <br><br>
+		    <span style="color:red">*品牌描述：</span>
+		    <input type="text" name="" id="up_desc" placeholder="品牌描述" style="width: 300px;height: 25px;">
+		     <br><br>
+		    </div>
+		    	<div class="modal-footer">
+				<button class="btn btn-primary" onclick="up_action()">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+ <!--  修改图片 -->
+ <div id="mo1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div >
+				<h3 class="modal-title" style="color:black;text-align: center; font-size: 15px;">查看大图</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true">×</a>
+			</div>
+			<div class="modal-body">
+			<input type="text" name="" id="up_id" hidden="" >
+			原始logo：<img src="" id="up_img" style="width:200px;height: 100px;">
+			新的logo：
+			<span id="newimg"></span>
+			<input type="file" name="up_brand_logo" id="up_brand_logo">
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="logo_update">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+</sectin>	
+{include file="footer"} 
+<script type="text/javascript">
+			     function show() {
+			    	 $.ajax({
+			    	 	url:'{:url("brand/show")}',
+			    	 	dataType:'json',
+			    	 	success:function(res){
+			    	 		var data=res.data
+			    	 		var tr=''
+			    	 		for (var i = 0; i < data.length; i++) {
+			     tr=tr+"<tr class='text-c'><td><input type='checkbox' class='mycheckbox' value='"+data[i]['brand_id']+"'><td>"+data[i]['brand_id']+"</td></td><td>"+data[i]['brand_name']+"</td><td><img style='height:30px; width:80px;' src='/uploads/"+data[i]['brand_logo']+"'><span onclick='mo1(\""+data[i]['brand_id']+"\",\""+data[i]['brand_logo']+"\")'>查看大图</span></td><td>"+data[i]['site_url']+"</td><td>"+data[i]['brand_desc']+"</td><td>"+data[i]['status']+"</td><td class='f-14 product-brand-manage'><a  style='text-decoration:none' onclick='modaldemo(\""+data[i]['brand_id']+"\",\""+data[i]['brand_name']+"\",\""+data[i]['brand_logo']+"\",\""+data[i]['site_url']+"\",\""+data[i]['brand_desc']+"\",\""+data[i]['status']+"\")' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='delete_one ml-5' onclick='del(\""+data[i]['brand_id']+"\",\""+data[i]['brand_logo']+"\")' title='删除'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>";
+	    	 		}
+	    	 		$('.table tbody').html(tr)
+	    	 		}
+	    	      })
+	    	    }
+	    	    show()
+
+                 function modaldemo(id,name,logo,site_url,desc){
+                 		$("#up_id").val(id)
+						$("#up_name").val(name)
+						$("#up_logo").val(logo)
+						$("#up_site_url").val(site_url)
+						$("#up_desc").val(desc)
+						$("#up_status").val(status)
+	                 $("#modal-demo").modal("show")
+	            }
+                
+
+			           function mo1(brand_id,brand_logo){
+			           	 $("#up_id").val(brand_id)
+						 $("#up_img").attr('src','/uploads/'+brand_logo)
+				         $("#mo1").modal("show")
+				 }
+                  
+                 $("#up_brand_logo").on('change',function () {
+                 	 var filePath=$(this).val()
+                 	 fileFormat=filePath.substring(filePath.lastIndexOf(".")).toLowerCase(),src=window.URL.createObjectURL(this.files[0]);
+                 	 if (!fileFormat.match(/.png|.jpg|.jpeg/)) {
+                 	 	error_prompt_alert('上传错误，文件格式必须为:png/jpg/jpeg');
+                 	 	return;
+                 	 }
+                 	 $("#newimg").html("<img src='"+src+"' style='width:200px;height:100px;'>")
+                      
+                 })
+
+                 
+                     $("#logo_update").click(function () {
+                     	 var brand_id=$("#up_id").val()
+                     	 var old_logo=$("#up_img").attr('src')
+                     	 var formData = new FormData();
+                         console.log(brand_id)
+						formData.append('brand_id', brand_id);
+						formData.append('old_logo', old_logo);
+						formData.append('brand_logo', $('input[name=up_brand_logo]')[0].files[0]);
+						$.ajax({
+							 url:"{:url('brand/imgupdate')}",
+						     data:formData,
+					       	 contentType:false,
+					       	 processData: false,
+					       	 cache:false,
+					       	 method:'POST',
+					       	 success:function(res){
+					       	 	show()
+					       	 	if (res.status=='ok') {
+					       	 		$("#up_id").val('')
+					       	 		$("#newimg").html('')
+					       	 	 $("#mo1").modal("hide")
+					       	 			show()
+					       	 	}
+					       	 }
+
+						})
+
+                     })
+
+
+
+	                   function up_action() {
+		               	var id=$("#up_id").val()
+						var name=$("#up_name").val()
+						var logo=$("#up_logo").val()
+						var site_url=$("#up_site_url").val()
+						var desc=$("#up_desc").val()
+							console.log(id)
+							$.ajax({
+							url:"{:url('brand/updateAction')}",
+							type:'post',
+							data:{
+							id:id,
+							name:name,
+							logo:logo,
+							site_url:site_url,
+							desc:desc	
+						},
+						dataType:'json',
+						success:function (res) {
+						 console.log(res)
+						 if (res.status=='ok') {
+	                  $("#modal-demo").modal("hide")
+						 }
+						 show()
+						}
+					})
+
+	               }
+                
+
+			    	    function del(id,logo) {
+			    	    	$.ajax({
+			    	    		url:"{:url('brand/delete')}",
+			    	    		data:{
+			    	    			id:id,
+			    	    			logo:logo
+			    	    		},
+			    	    		type:'post',
+			    	    		dataType:'json',
+			    	    		success:function (res) {
+			    	    			console.log(res)
+			    	    			if (res.status=='ok') {
+			    	    				alert('删除成功√')
+			    	    			}
+			    	    			show()
+			    	    		}
+			    	    	})
+			    	    }
+
+					    function deletemore() {
+					      var box=$(".mycheckbox:checked")
+					      var id=''
+					      for (var i = 0; i < box.length; i++) {
+					      	id=id+","+box[i].value
+					      }
+					      $.ajax({
+					      	 url:"{:url('brand/deletemore')}",
+					      	 data:{
+					      	 	id:id
+					      	 },
+					      	 type:'post',
+					      	 dataType:'json',
+					      	 success:function (res) {
+					      	 	console.log(res)
+					      	 	if (res.status=='ok') {
+					      		alert('删除成功√')
+					      		show()
+					      	 	}
+					      	 }
+					      })
+					    }
+				   
+	     
+
+</script>
+

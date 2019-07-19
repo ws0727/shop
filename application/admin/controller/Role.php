@@ -3,25 +3,17 @@ namespace app\admin\controller;
 use gmars\rbac\Rbac;
 use Request;
 use Db;
-
 class Role extends Common
 	{
 	    public function list()
 	    {
-
-
 	      return $this->fetch();
 	    }
-
-
 	      public function add()
 	    {
-
-
 	      return $this->fetch();
 	    }
         
-
             public function updateAction()
 	    {
           
@@ -59,7 +51,6 @@ class Role extends Common
 	     
 	    }
 	         
-
         public function show()
 	    {
 	    
@@ -67,8 +58,7 @@ class Role extends Common
          $arr=Db::query("select id,name,description from role");
           echo  json_encode($arr);
 	    }
-
-
+	    
 	     public function permissionshow()
         {
     
@@ -79,12 +69,10 @@ class Role extends Common
             foreach ($arr as $key => $value) {
             	$newarr[$value['p_c_name']][]=$value;
             }
-
+            
              $json=['code'=>'0','status'=>'ok','data'=>$newarr];
              return json($json);
          }
-
-
            public function mypermissionshow()
        {
          $id=Request::get('id');
@@ -93,12 +81,9 @@ class Role extends Common
          $json=['code'=>'0','status'=>'ok','data'=>$arr];
          return json($json);
          }
-
-
 	    
 	      public function delete()
 	    {
-
         $data=Request::post();
 	       $validate = new \app\admin\validate\Delete;
             if (!$validate->check($data)) {
@@ -112,11 +97,8 @@ class Role extends Common
 	    echo json_encode($arr);
 		  
        }
-
-
           public function deletemore()
 	    {
-
        $data=Request::post();
        $id=Request::post('id');
 	       $validate = new \app\admin\validate\Delete;
@@ -132,11 +114,10 @@ class Role extends Common
 	    array_shift($id);
 	    $rbac= new Rbac();
 	    $rbac->delRole($id);
-	    $arr=['code'=>0,'status'=>'ok','data'=>'删除成功'];
+	    $arr=['code'=>0,'status'=>'ok','data'=>'删除成功']; 
 	    echo json_encode($arr);
 		  
        }
-
         public function addAction()
 	    {
  
@@ -170,5 +151,4 @@ class Role extends Common
              echo json_encode($arr);
 	     }
 		    }
-
     }

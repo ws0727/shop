@@ -1,95 +1,98 @@
 {include file="header"}
 <body>
-<article class="cl pd-20">
-	<form action="" method="post" class="form form-horizontal" id="form-admin-role-add" style="padding: 30px;">
-		<div class="row cl">
-			<input type="hidden" id="__token__" value="{$Request.token}" hidden="" />
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色名称：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="name" name="roleName" datatype="*4-16" nullmsg="用户账户不能为空">
+	<article class="cl pd-20">
+		<form action="" method="post" class="form form-horizontal" id="form-admin-role-add" style="padding: 30px;">
+			<div class="row cl">
+				<input type="hidden" id="__token__" value="{$Request.token}" hidden="" />
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色名称：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="name" name="roleName" datatype="*4-16" nullmsg="用户账户不能为空">
+				</div>
 			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">备注：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="description" name="">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">备注：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="description" name="">
+				</div>
 			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">网站角色：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<dl class="permission-list" id="permission-list">
-				</dl>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">网站角色：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<dl class="permission-list" id="permission-list">
+					</dl>
+				</div>
 			</div>
-		</div>
-		<div class="row cl">
-			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<button type="button" class="btn btn-success radius" id="add" name="admin-role-save"><i class="icon-ok"></i> 确定</button><span id="addspan"></span>
+			<div class="row cl">
+				<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+					<button type="button" class="btn btn-success radius" id="add" name="admin-role-save"><i class="icon-ok"></i> 确定</button><span id="addspan"></span>
+				</div>
 			</div>
-		</div>
-	</form>
-</article>
-{include file="footer"} 
+		</form>
+	</article>
+	{include file="footer"} 
 
-<!--_footer 作为公共模版分离出去-->
+	<!--_footer 作为公共模版分离出去-->
 
-<script type="text/javascript">
+	<script type="text/javascript">
 
-		        $('#add').click(function () {
-		        	var __token__=$('#__token__').val()
-		        	var name=$('#name').val()
-		        	var description=$('#description').val()
-		        	var mycheckbox=$('.mycheckbox:checked')
-		        	var permission_id=''
-		        	for (var i = 0; i < mycheckbox.length; i++) {
-		        		 permission_id=permission_id+','+mycheckbox[i].value
-		        	}
-		        
-		        $.ajax({
-		        	url:"{:url('role/addaction')}",
-		        	data:{
-		        		name:name,
-		        		description:description,
-		        		permission_id:permission_id,
-		        		__token__:__token__
-		        	},
-		        	type:'post',
-		        	dataType:'json',
-		        	success:function (res) {
-		        	   console.log(res)
-		        		if (res.status=='ok') {
-                     window.location.href="{:url('role/list')}";
-		        		}
-		        		if (res.status='error') {
-		        		$("#addspan").html(res.data)
-		        		$("#addspan").css("color",'red')
-		        		}
-		        	   getToken()
-
-		        	}
-		        })
-		    })
-
-
-		    $.ajax({
-				url:"{:url('role/permissionshow')}",
+		$('#add').click(function () {
+			var __token__=$('#__token__').val()
+			var name=$('#name').val()
+			var description=$('#description').val()
+			var mycheckbox=$('.mycheckbox:checked')
+			var permission_id=''
+			for (var i = 0; i < mycheckbox.length; i++) {
+				permission_id=permission_id+','+mycheckbox[i].value
+			}
+			
+			$.ajax({
+				url:"{:url('role/addaction')}",
+				data:{
+					name:name,
+					description:description,
+					permission_id:permission_id,
+					__token__:__token__
+				},
+				type:'post',
+				dataType:'json',
 				success:function (res) {
-				 var data=res.data
+					console.log(res)
+					if (res.status=='ok') {
+						window.location.href="{:url('role/list')}";
+					}
+					if (res.status='error') {
+						$("#addspan").html(res.data)
+						$("#addspan").css("color",'red')
+					}
+					getToken()
+
+				}
+			})
+		})
+
+
+		$.ajax({
+			url:"{:url('role/permissionshow')}",
+			success:function (res) {
+				var data=res.data
 				 // console.log(data)
 				 dl=''
 				 $.each(data, function (key,value) {
-				 dl=dl+"<dt><label class='' style='color:blue'><input type='checkbox' value=''>"+key+"</label></dt><dd><dl class='cl permission-list2'>"	
-				 // console.log(value) 
-				 	 $.each(value, function (key1,value1) {
-                  dl=dl+"<label class=''><input type='checkbox' class='mycheckbox' value='"+value1['id']+"'>"+value1['name']+"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+				 	dl=dl+"<dt><label class='' style='color:blue'><input type='checkbox' value=''>"+key+"</label></dt><dd><dl class='cl permission-list2'>"	
+				 	console.log(value) 
+				 	$.each(value, function (key1,value1) {
+				 		dl=dl+"<label class=''><input type='checkbox' class='mycheckbox' value='"+value1['id']+"'>"+value1['name']+"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                      // console.log(value1) 
-			 	 })
-				 	 dl=dl+"</dd>";
-			 });  
+                 })
+				 	dl=dl+"</dd>";
+				 });  
                   // console.log(dl)
                   $("#permission-list").html(dl)
-	      }
+              }
 
-	 })
+          })
 
-</script>
+
+		
+
+      </script>

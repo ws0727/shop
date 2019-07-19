@@ -1,0 +1,176 @@
+{include file="header"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		产品管理
+		<span class="c-gray en">&gt;</span>
+		分类管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div class="text-c">	
+			</div>
+		   <input id="__token__" name="__token__" value="{$Request.token}" hidden="" />
+			添加：<span id="pid" value='0' style="color: red">一级分类</span> &nbsp&nbsp的子类
+			<input type="text" id="name"  style="width: 200px;height: 25px;">
+		
+			<button type="button" class="btn btn-success" id="add" name="" ><i class="Hui-iconfont">&#xe600;</i> 添加</button>
+			<span id="addx"></span>
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> <a href="javascript:;" onclick="deletemore()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>批量删除</a></span>
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+			</div>
+			<div class="mt-10">
+			</div>
+		</article>
+		<div id="mytree">
+		<ul style="list-style-type:block;">
+			   <li></li>
+		</ul>
+		</div>
+	    </div>
+         
+       <div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title">对话框标题</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+			<input type="" name="" id="up_id" style="width:200px;">
+			产品类名：<input type="" name="" id="up_name" style="width:200px;">
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="up_action()">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+</section>	
+{include file="footer"} 
+<script type="text/javascript">
+                        
+                        	function modaldemo1(id,name){
+                              $("#up_id").val(id)
+                              $("#up_name").val(name)
+				        $("#modal-demo").modal("show")}
+
+
+
+				 function show() {
+				 	$.ajax({
+				 		url:"{:url('goodscate/show')}",
+				 		success:function (res) {
+				 			//console.log(res)
+                           $("#mytree").html(res)
+                            // $('.qq .qq').css('display','none')
+
+				 		}
+				 	})
+				 } show()
+
+                   
+                       $(document).on('click','.ws',function () {
+                           	  pid_html=$(this).html()
+                           	  pid=$(this).attr('value')
+                           	  $("#pid").html(pid_html)
+                           	  $("#pid").attr('value',pid)
+                            var bool=$(this).next().css('display')
+                            //console.log(bool)
+                           	 if (bool=='none') {
+                           	 $(this).next().css('display','block')	
+                           	 }
+                           	 if (bool=='block') {
+                           	  $(this).next().css('display','none')
+
+                           	 }
+                           })
+
+
+
+				 	 $('#add').click(function(){
+                      var pid=$("#pid").attr('value')
+                      var name=$("#name").val()
+                      var __token__=$('#__token__').val()
+                      console.log(name)
+                      $.ajax({
+                      	 url:"{:url('goodscate/addAction')}",
+                      	 type:'post',
+                      	 data:{
+                      	 	pid:pid,
+                      	 	name:name,
+                      	 	__token__:__token__
+                      	 },
+                      	 dataType:'json',
+                      	 success:function (res) {
+                      	 	console.log(res)
+                      	 	if (res.status=='ok') {
+                         $('#id'+pid).next().append('<li value="'+res.data+'" id="id'+res.data+'">'+name+'</li>');
+                              $("#addx").html(res.data)
+                              $("#addx").css("color",'red')
+                              setTimeout(function(){
+							 $("#addx").html('');
+								},3000);
+								
+							 if (res.status='error') {
+						 	 $("#addx").html(res.data)
+							  $("#addx").css("color",'red');
+							 }
+	       	   	  	        show()	
+	       	   	  	    	getToken() 
+                      	 	}
+                      	 }
+
+                     })
+                     
+                 })
+			
+                		 function modaldemo(id) {
+					 	$.ajax({
+					 		url:"{:url('goodscate/delete')}",
+					 		type:'post',
+					 		data:{
+					 			id:id
+					 		},
+					 		dataType:'json',
+					 		success:function (res) {
+					 			console.log(res)
+					 			
+					 			if (res.status=='ok') {
+					 				alert('删除成功')
+					 				show()
+					 			}
+					 		}
+					 	})
+					 	
+					 }
+
+	                 function up_action() {
+	                 	var id=$("#up_id").val()
+	                 	var name=$("#up_name").val()
+	                 	console.log(name)
+	                 	$.ajax({
+	                 		url:"{:url('goodscate/updateAction')}",
+	                 		type:'post',
+	                 		data:{
+	                 			id:id,
+	                 			name:name
+	                 		},
+	                 		dataType:'json',
+	                 		success:function (res) {
+	                 			console.log(res)
+	                 			if (res.status=='ok') {
+	                 		 $("#modal-demo").modal("hide")
+	                 		 show()
+	                 			}
+	                 		}
+
+
+	                 	})
+	                 }
+
+					
+              
+</script>
+

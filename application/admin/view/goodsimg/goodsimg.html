@@ -1,0 +1,116 @@
+{include file="header"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		产品管理
+		<span class="c-gray en">&gt;</span>
+		品牌管理<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div style="text-align: center;">
+			<input type="file" name="" id="file" multiple="" style="text-align: ">
+			<input type="text" name="" id="goods_id" value="{$goods_id}" hidden="">
+			<button type="button" class="btn btn-success" id="add" name="" ><i class="Hui-iconfont">&#xe600;</i> 添加</button>
+		</div>
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> <a href="javascript:;" onclick="deletemore()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>图片展示</a></span>
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead>
+					<tr>
+						<th scope="col" colspan="16">员工列表</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="130">ID</th>
+						<th width="200">big_img</th>
+						<th width="200">middle_img</th>
+						<th width="200">samll_img</th>
+						<th width="130">goods_id</th>
+						<th width="130">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</article>
+	</div>
+</sectin>	
+{include file="footer"} 
+<script type="text/javascript">
+		   
+
+				      function show() {
+				      	var goods_id=$("#goods_id").val()
+				          $.ajax({
+                          url:"{:url('goodsimg/goodsimgshow')}",
+                          data:{
+                          	goods_id:goods_id,
+                          },
+                          type:'post',
+                          dataType:'json',
+                          success:function (res) {
+                          console.log(res)
+                          var data=res.data
+			    	 		var tr=''
+			    	 		for (var i = 0; i < data.length; i++) {
+				    tr=tr+"<tr class='text-c'><td><input type='checkbox'><td>"+data[i]['id']+"</td><td><img src='/uploads/goodsimg/"+data[i]['big_img']+"'></td><td><img src='/uploads/goodsimg/"+data[i]['middle_img']+"'</td><td><img src='/uploads/goodsimg/"+data[i]['samll_img']+"'</td><td>"+data[i]['goods_id']+"</td><td class='f-14 product-brand-manage'><a style='text-decoration:none' class='delete_one ml-5' onclick='del(\""+data[i]['id']+"\")' title='删除'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>";
+		    	 		}
+		    	 		$('.table tbody').html(tr)
+                          }
+				        })    
+				      }   show()
+
+
+                      $('#add').click(function () {
+                      	var file=$("#file")[0].files
+                      	var goods_id={$goods_id}
+
+                     
+                        var formData=new FormData
+                         formData.append('goods_id', goods_id)
+                        for (var i = 0; i < file.length; i++) {
+                          formData.append('file[]', file[i]);
+                        }
+                       
+		                  $.ajax({
+                      	 url:"{:url('goodsimg/addimg')}",
+				       	 type:'post',
+				       	 data:formData,
+				       	 contentType:false,
+				       	 processData: false,
+				       	 cache:false,
+				       	 success:function (res) {
+				       	 	// console.log(res)
+	    	    			show()
+				       	}
+		            })
+                })
+
+               function del(id) {
+
+                      $.ajax({
+                      	url:"{:url('goodsimg/imgdelete')}",
+                      	type:'post',
+                      	data:{
+                         id:id
+                      	},
+
+                      	dataType:'json',
+                      	success:function (res) {
+                      	  // console.log(res)
+	    	    			if (res.status=='ok') {
+	    	    			 alert('删除成功√')
+	    	    			}
+	    	    			show()
+                      	}
+
+                     })	
+                   }
+
+</script>
+
+
+
+

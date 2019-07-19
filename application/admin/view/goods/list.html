@@ -1,0 +1,131 @@
+{include file="header"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		产品管理
+		<span class="c-gray en">&gt;</span>
+		品牌管理<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+		
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> <a href="javascript:;" onclick="()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>批量删除</a></span>
+				&nbsp&nbsp&nbsp&nbsp
+
+			  <a href="{:url('goods/add')}"><span class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加商品 </span></a>
+                &nbsp&nbsp&nbsp&nbsp
+                
+			   <a href="{:url('attrcategory/list')}" style="background: #429842"><span  class="btn btn-primary radius"><i class="Hui-iconfont" >&#xe600;</i> 添加属性 </span></a>
+
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+
+
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead>
+					<tr>
+						<th scope="col" colspan="20">员工列表</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="100">编号</th>
+						<th width="150">名称</th>
+						<th width="150">品牌</th>
+						<th width="150">类型</th>
+						<th width="150">描述</th>
+						<th width="150">价格</th>
+					    <th width="150">缩略图</th>
+						<th width="150">商品属性</th>
+						<th width="150">货品</th>
+						<th width="150">上架</th>
+						<th width="150">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</article>
+	</div>
+
+		<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" style="color:#A0E8A0;text-align: center;">权限修改</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body" style="text-align: center; padding: 10px;">
+				<input type="text" id="up_id" style="width: 100px; height: 25px;" >
+				<br><br>
+				<span style="color: red">*</span>商品名称：
+				<input type="text" id="up_name"  placeholder="商品名称" style="width: 200px; height: 25px;">
+				<br><br>
+				<span style="color: red">*</span>所属品牌：
+				<select id="up_brand_id"><option></option></select>
+				&nbsp&nbsp&nbsp&nbsp&nbsp
+			    <span style="color: red">*</span>商品类型：
+			    <select id="up_cate_id"><option></option></select>
+				<br><br>
+				<span style="color: red">*</span>商品描述：
+				<input type="text" id="up_desction"  placeholder="商品描述"  style="width: 200px; height: 25px;">
+				<br><br>
+				<span style="color: red">*</span>商品价格：
+				<input type="text" id="up_price"   placeholder="商品价格" style="width: 200px; height: 25px;">
+				<br><br>
+				<span style="color: red">*</span>商品状态：
+				<input type="text" id="up_status"  placeholder="商品状态"  style="width: 200px; height: 25px;">
+
+				<span id="uname"></span>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="up_action()">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+</sectin>	
+{include file="footer"} 
+<script type="text/javascript">
+			    function show() {
+			    	 $.ajax({
+			    	 	url:'{:url("goods/show")}',
+			    	 	dataType:'json',
+			    	 	success:function(res){
+			    	 		var data=res.data
+			    	 		var tr=''
+			    	 		for (var i = 0; i < data.length; i++) {
+		     tr=tr+"<tr class='text-c'><td><input type='checkbox'><td>"+data[i]['product_id']+"</td><td>"+data[i]['product_name']+"</td><td>"+data[i]['brand_name']+"</td><td>"+data[i]['name']+"</td><td>"+data[i]['desction']+"</td><td>"+data[i]['price']+"</td><td><a href='{:url('goodsimg/goodsimg')}?id="+data[i]['product_id']+"'><i class='Hui-iconfont'>&#xe613;</i>&nbsp&nbsp&nbsp&nbsp详情</a></td><td><a href='{:url('goodsattr/list')}?id="+data[i]['product_id']+"'><i class='Hui-iconfont'>&#xe610;&nbsp&nbsp&nbsp&nbsp详情</i></a></td><td><a href='{:url('goodsp/list')}?id="+data[i]['product_id']+"'><i class='Hui-iconfont'>&#xe61d;&nbsp&nbsp&nbsp&nbsp详情</i></a></td><td>"+data[i]['status']+"</td><td class='f-14 product-brand-manage'><a  style='text-decoration:none' onclick='modaldemo(\""+data[i]['product_id']+"\",\""+data[i]['product_name']+"\",\""+data[i]['brand_id']+"\",\""+data[i]['cate_id']+"\",\""+data[i]['desction']+"\",\""+data[i]['price']+"\",\""+data[i]['status']+"\")' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='delete_one ml-5' onclick='del(\""+data[i]['product_id']+"\")' title='删除'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>";
+    	 		}
+    	 		$('.table tbody').html(tr)
+    	 		}
+    	      })
+    	   }
+    	   show()
+    	  
+
+					function del(id) {
+					  $.ajax({
+					  	url:"{:url('goods/delete')}",
+					  	type:'post',
+					  	data:{
+					     id:id
+					  	},
+					  	dataType:'json',
+					  	success:function (res) {
+					  	  console.log(res)
+							if (res.status=='ok') {
+							 alert('删除成功√')
+							}
+							show()
+					  	}
+
+					 })	
+                 }
+                  
+
+</script>
+
+
+
+

@@ -1,0 +1,158 @@
+{include file="header"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		产品管理
+		<span class="c-gray en">&gt;</span>
+		产品属性<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			属性分类：<select id="attr_category" onchange="get_attr()" style="width: 100px;height: 25px;">
+				    <option ></option>
+			</select>
+            <input type="text" name="" id="goods_id" value="{$goods_id}" hidden="">
+			<button type="button" class="btn btn-success radius" id="add" name="admin-role-save"><i class="icon-ok"></i> 确定</button><span id="addspan"></span>
+
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> <a href="javascript:;"  class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>批量删除</a></span>
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead>
+					<tr>
+						<th scope="col" colspan="16">产品属性</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="130">ID</th>
+						<th width="130">商品名称</th>
+						<th width="130">属性</th>
+						<th width="130">属性细分</th>
+						<th width="140">操作</th>
+						<th width="130">删除</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+
+			 </table>
+			  
+				<dl class="permission-list" style="width: 420px; height:40%;" id="myattr">
+				
+			</div>
+
+		</article>
+	</div>	
+
+</sectin>	
+{include file="footer"} 
+<script type="text/javascript">
+		             
+              function getCate(str,id=0) {
+              	 var goods_id=$("#goods_id").val()
+              	  console.log(goods_id)
+              	 $.ajax({
+              	 	url:"{:url('goodsattr/attrcategory_show')}",
+              	 	data:{
+							goods_id:goods_id
+						},
+					type:'post',
+              	 	dataType:'json',
+              	 	success:function (res) {
+              	 	     data=res.data
+              	 	    var option="<option value='0'>- 选择分类 -</option>"
+
+              	 	    for (var i = 0; i < data.length; i++) {
+              	 	    	if (data[i].id==res.default[0].attr_cate) {
+
+              	 	    	 option=option+"<option value='"+data[i].id+"'selected>-"+data[i].name+"-</option>" 	
+              	 	    	}else{
+              	 	    	 option=option+"<option value='"+data[i].id+"'>-"+data[i].name+"-</option>"	
+              	 	    	}
+              	 	    	
+              	 	    }
+              	 	      $('#'+str+'').html(option)
+              	 	      if (res.default[0].attr_cate!=null) {
+              	 	          get_attr()
+              	 	      }
+              	 	}
+              	 })
+              }
+              getCate("attr_category")
+
+
+
+ 
+                   function get_attr() {
+                       var goods_id=$("#goods_id").val()
+		               var attr_category=$("#attr_category").val()
+				      $.ajax({
+						url:"{:url('goodsattr/show')}",
+						data:{
+							attr_category:attr_category,
+							goods_id:goods_id
+						},
+						type:'post',
+						dataType:'json',
+						success:function (res) {
+						 var data=res.data
+						 // console.log(res)
+						 dl=''
+						 $.each(data, function (key,value) {
+						 dl=dl+"<dt><label class='' style='color:red'><input type='checkbox' value=''>"+key+"</label></dt><dd><dl class='cl permission-list2'>"	
+						 // console.log(dl) 
+						 	 $.each(value, function (key1,value1) {
+		                  dl=dl+"<label class=''><input type='checkbox' id='ad"+value1['id']+"' class='mycheckbox' value='"+value1['id']+"'>"+value1['a_d_name']+"</label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+		                     // console.log(value1) 
+					 	 })
+						 	 dl=dl+"</dd>";
+					 });  
+		                  // console.log(dl)
+		                  $("#myattr").html(dl)
+		                  var mydefault=res.default
+		                  console.log(mydefault)
+		                  for (var i = 0; i < mydefault.length; i++) {
+		                  	   id=mydefault[i].attr_details_id
+		                  	   $('#ad'+id).prop('checked',true)
+		                  }
+			      }
+                   
+			 })
+		 
+         }
+           
+              
+		              
+
+			 	     $("#add").click(function () {
+			 	     	var goods_id=$("#goods_id").val()
+			 	     	var attr_cate=$("#attr_category").val()
+			 	     	var checkbox=$('.mycheckbox:checked')
+			 	     	var attr_details_id=''
+
+			 	     	for (var i = 0; i < checkbox.length; i++) {
+			 	     		attr_details_id=attr_details_id+","+checkbox[i].value
+			 	     	}
+			 	     	  $.ajax({
+			 	     	  	url:"{:url('goodsattr/addAction')}",
+			 	     	  	type:'post',
+			 	     	  	data:{
+			 	     	  		goods_id:goods_id,
+			 	     	  		attr_details_id:attr_details_id,
+			 	     	  		attr_cate:attr_cate
+			 	     	  	},
+			 	     	  	dataType:'json',
+			 	     	  	success:function (res) {
+			 	     	  		console.log(res)
+			 	     	  		// if (res.status=='ok') {
+			 	     	  		// 	alert(123)
+			 	     	  		// }
+			 	     	  		
+			 	     	  	}
+			 	     	})
+			 	     })
+</script>
+
+
+
+

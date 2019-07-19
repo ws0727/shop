@@ -100,6 +100,7 @@ class Permission extends Common
 	      	$arr=Db::table('permission')->update($data);
 	      	$arr=['code'=>0,'status'=>'ok','data'=>'修改成功'];
 	      	echo json_encode($arr);
+	      	die;
 	      }
 	    }
 	    //什么时候可以修改内容

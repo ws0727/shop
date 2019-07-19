@@ -1,0 +1,87 @@
+{include file="header"}
+<body>
+<article class="cl pd-20">
+	<form action="" method="post" class="form form-horizontal" id="form-admin-add">
+		<div class="row cl">
+			<input id="__token__" name="__token__" value="{$Request.token}" hidden="" />
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>品牌名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" name="" id="name" style="width: 340px;height: 25px;">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>LOGO：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="file" name="myfile" id="brand_logo"/>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>品牌网址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" name="" id="site_url" style="width: 340px;height: 25px;">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>品牌描述：</label>
+			<div class="formControls col-xs-8 col-sm-9" >
+				<input type="text" name="" id="desc" style="width: 340px;height: 25px;">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>品牌状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<select id="status" style="width: 100px;height: 25px;">
+					<option selected="1">1</option>
+				</select>
+				<span style="font-size: 10px; color: red;">*1为线上状态</span>
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" onclick="add()" type="button" value="提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+{include file="footer"} 
+<script>
+			        function add() {
+			       	var name=$("#name").val()
+			       	var site_url=$("#site_url").val()
+			       	var desc=$("#desc").val()
+			       	var status=$("#status").val()
+			       	var brand_logo=$('#brand_logo')[0].files[0]
+			       	var __token__=$('#__token__').val()
+			        var formData = new FormData();
+                     
+					formData.append('name', name);
+					formData.append('site_url', site_url);
+					formData.append('desc', desc);
+					formData.append('status', status);
+				    formData.append('__token__', __token__);
+					formData.append('brand_logo', $('#brand_logo')[0].files[0]);
+
+			       $.ajax({
+			       	 url:"{:url('brand/addAction')}",
+			       	 type:'post',
+			       	 data:formData,
+			       	 contentType:false,
+			       	 processData: false,
+			       	 cache:false,
+			       	 success:function (res) {
+			       	 	
+			       	 	getToken()
+			       	  console.log(res)
+                     window.location.href="{:url('brand/list')}";
+			       	 }
+
+			       })
+
+			     }
+
+</script>

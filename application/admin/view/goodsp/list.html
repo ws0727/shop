@@ -1,0 +1,248 @@
+{include file="header"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		产品管理
+		<span class="c-gray en">&gt;</span>
+		品牌管理<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	 <div class="Hui-article">
+		<article class="cl pd-20">
+			<div style="text-align: center;">
+		    <input type="text" name="" id="goods_id" value="{$goods_id}" hidden="">
+		    
+             </div>
+			 <div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> <a href="javascript:;" onclick="()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>批量删除</a></span>
+				&nbsp&nbsp&nbsp&nbsp
+
+			   <button class="btn btn-danger radius" onclick="modaldemo()" style="background:#4CA44C;border:#4CA44C"><i class="Hui-iconfont" >&#xe600;</i> 添加货品</button>
+          
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead>
+					<tr>
+						<th scope="col" colspan="20">员工列表</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="100">ID</th>
+						<th width="150">商品属性</th>
+						<th width="150">商品价格</th>
+						<th width="150">商品库存</th>
+						<th width="150">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</article>
+	</div>	
+		<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" style="color:black;text-align: center;">货品添加</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div style="text-align: center;">
+		    <div id="attr_id"></div>
+		    价格：<input type="text" name="" id="price" style="width: 250px;height: 26px;">
+		    <br><br>
+		    库存：<input type="text" name="" id="n_number" style="width: 250px;height: 26px;">
+		    <br><br>
+		    </div>
+		    	<div class="modal-footer">
+				<button class="btn btn-primary" onclick="addaction()">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>	
+   <!--   修改 -->
+	<div id="modal-demo1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" style="color:black;text-align: center;">货品添加</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div style="text-align: center;" hidden="">
+			<input type="text" id="up_id" name="" style="width: 250px;height: 26px;">
+			<br><br>
+		    <div id="attr_id"></div>
+		    价格：<input type="text" name="" id="up_price" style="width: 250px;height: 26px;">
+		    <br><br>
+		    库存：<input type="text" name="" id="up_n_number" style="width: 250px;height: 26px;">
+		    <br><br>
+		    </div>
+		    	<div class="modal-footer">
+				<button class="btn btn-primary" onclick="up_action()">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>	
+
+</sectin>	
+{include file="footer"} 
+<script type="text/javascript">
+	function getcate() {
+		var goods_id=$("#goods_id").val()
+              	   // console.log(goods_id)
+              	   $.ajax({
+              	   	url:"{:url('goodsp/getcate')}",
+              	   	type:'post',
+              	   	data:{
+              	   		goods_id:goods_id
+              	   	},
+              	   	dataType:'json',
+              	   	success:function (res) {
+              	   	  	 // console.log(res)
+              	   	  	 data=res.data
+              	   	  	 var div=''
+              	   	  	 $.each(data,function (key,value) {
+              	   	  	 	div=div+"<span>"+key+"</span>&nbsp&nbsp&nbsp&nbsp&nbsp<select style='width:100px;height:30px;' >"
+
+              	   	  	 	$.each(value,function (key1,value1) {
+              	   	  	 		div=div+"<option value='"+value1['a_d_id']+"'>"+value1['ad_name']+"</option>"
+
+              	   	  	 	})
+              	   	  	 	div=div+"</select><br><br>"
+
+              	   	  	 })
+
+              	   	  	 $("#attr_id").html(div)
+
+              	   	  	}
+              	   	  })
+              	}
+              
+
+
+
+              function modaldemo(){
+              	$("#modal-demo").modal("show")
+              }
+              getcate()
+
+
+              function addaction() {
+              	var price=$("#price").val()
+              	var n_number=$("#n_number").val()
+              	var goods_attr_id=[]
+              	var goods_id=$("#goods_id").val()
+              //children返回元素的子元素的集合
+              $("#attr_id").children('select').each(function (key,value) {
+              	for (var i = 0; i < value.length; i++) {
+              		if (value.options[i].selected) {
+              			goods_attr_id.push(value[i].value);
+              		}
+              	 } 
+              })
+               console.log(goods_attr_id)
+              $.ajax({
+				url:"{:url('goodsp/addAction')}",
+				type:'post',
+				data:{
+				price:price,
+				goods_attr_id:goods_attr_id,
+				n_number:n_number,
+				goods_id:goods_id
+				},
+				dataType:'json',
+              	success:function (res) {
+              		console.log(res)
+              		if (res.status=='ok') {
+              	  $("#modal-demo").modal("hide")
+              		}
+              		 show()
+              	}  
+              })
+          }
+
+
+
+                 function show() {
+                 var goods_id=$("#goods_id").val()
+                   console.log(goods_id)
+                   $.ajax({
+                   	 url:"{:url('goodsp/show')}",
+                   	 type:'post',
+                   	 data:{
+                   	 	goods_id:goods_id
+                   	 },
+                   	 dataType:'json',
+                   	 success:function (res) {
+                   	 	console.log(res)
+                   	 	data=res.data
+                   	 	 var tr=''
+                   	 	 for (var i = 0; i < data.length; i++) {
+                   	 	   tr=tr+"<tr class='text-c'><td><input type='checkbox' class='mycheckbox' value='"+data[i]['id']+"'></td><td>"+data[i]['id']+"</td><td>"+data[i]['name']+"</td><td>"+data[i]['price']+"</td><td>"+data[i]['n_number']+"</td><td class='f-14 product-brand-manage'><a onclick='modaldemo1(\""+data[i]['id']+"\",\""+data[i]['price']+"\",\""+data[i]['n_number']+"\")'  style='text-decoration:none' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a onclick='del(\""+data[i]['id']+"\")' style='text-decoration:none' class='delete_one ml-5' title='删除'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>"	
+                   	 	 }
+                   	 	 $('.table tbody').html(tr)
+                   	 }
+                   })
+                 }
+                 show()
+
+
+                   function modaldemo1(id,price,n_number){
+                    $("#up_id").val(id)
+                   	$("#up_price"). val(price)
+                   	$("#up_n_number").val(n_number)
+                	$("#modal-demo1").modal("show")
+              }
+
+	               function up_action() {
+	               var id=$("#up_id").val()
+                   var price=$("#up_price"). val()
+                   var n_number=$("#up_n_number").val()
+	                   $.ajax({
+	                      url:"{:url('goodsp/updateAction')}",
+	                      type:'post',
+	                      data:{
+	                       id:id,
+	                       price:price,
+	                       n_number:n_number
+	                      },
+	                      dataType:'json',
+	                      success:function (res) {
+	                      	 console.log(res)
+	                      	 if (res.status=='ok') {
+	                      	$("#modal-demo1").modal("hide")
+	                      	 show()
+	                      	 }
+
+	                      }
+	                                        	
+	                   })
+		              }
+
+   
+
+              function del(id) {
+                 $.ajax({
+                 	url:"{:url('goodsp/delete')}",
+                 	type:'post',
+                 	data:{
+                 		id:id
+                 	},
+                 	dataType:'json',
+                 	success:function (res) {
+                 	   console.log(res)
+                 	   if (res.status=='ok') {
+                 	   	   alert('删除成功√')
+
+                 	   }
+                 	    show()
+                 	}
+                 })
+              }
+             
+               
+</script>
+
+
+
+
