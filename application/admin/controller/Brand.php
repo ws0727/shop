@@ -79,15 +79,14 @@ class Brand extends Common
 	     }else{
 	     	foreach ($arr as $key => $value) {
 	     		if ($value['brand_id']!=$data['id']) {
-	     		 $arr=['code'=>1,'status'=>'error','data'=>'不能重复'];
+	     		 $arr=['code'=>'1','status'=>'error','data'=>'不能重复'];
 	     		 echo json_encode($arr);
 	     		 die;
 	     		 }
 	     	}
 	      	$arr=Db::table('brand')->where('brand_id',$data['id'])->update($arr);
-	      	$arr=['code'=>0,'status'=>'ok','data'=>'修改成功'];
-	      	echo json_encode($arr);
-	      	die;
+	      	$arr1=['code'=>'0','status'=>'ok','data'=>'修改成功'];
+	      	echo  json_encode($arr1);
 	     }
     }
 
