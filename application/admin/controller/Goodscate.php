@@ -55,7 +55,7 @@ class Goodscate extends Common
 		    	 Cache::set('name',$arr,3600);
 		    	}
 		    	
-		    	// $this->getTree($arr);
+		    	$this->getTree($arr);
 		    	
 		    }
 
